@@ -1,0 +1,5 @@
+write code to do sentiment analysis
+write code to grab tweets
+write code to filter and preprocess tweets
+finalize a list of hashtags to use
+
