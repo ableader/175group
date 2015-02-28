@@ -1,10 +1,10 @@
 import json
 import pandas as pd
-import matplotlib.pyplot as ply
 import re
 
-tweets_data_path = 'twitter_data.txt'
-companies = ['apple','microsoft','amazon','google']
+tweets_input_path = 'twitter_data.txt'
+pandas_output_path = 'twitter_table.csv'
+companies = ['AAPL','AMZN','GOOG','MSFT']
 
 #Check if tweet relates to a certain company
 def group_by_company(hashtags, text):
@@ -43,7 +43,7 @@ def analyze_column(col, list):
 	
 #Read the file
 tweets_data = []
-tweets_file = open(tweets_data_path, "r")
+tweets_file = open(tweets_input_path, "r")
 for line in tweets_file:
     try:
         tweet = json.loads(line)
@@ -54,6 +54,7 @@ for line in tweets_file:
 #Create the tweet structure
 tweets = pd.DataFrame()
 tweets['text'] = list(map(lambda tweet: tweet['text'], tweets_data))
+tweets['created_at'] = list(map(lambda tweet: tweet['created_at'], tweets_data))
     
 #Assemble the hashtag lists
 #Make sure there is a corresponding text file for each company (e.g. if apple is a company, there must be an apple.txt file)
@@ -69,12 +70,14 @@ for company in companies:
 		hashtag_dict[company] = hashtag_list
 	except:
 		print("derp")
-
+		
 #Use group by company to create proper colums
 for company in companies:
 	tweets[company] = tweets['text'].apply(lambda tweet: group_by_company(hashtag_dict[company], tweet))
-
-#TODO grab the word map from a file and create a list of words and a dictionary mapping words to values
+	
+#Save to CSV file
+print(tweets)	
+tweets.to_csv(pandas_output_path)
 
 
 input("Hit return to continue")
