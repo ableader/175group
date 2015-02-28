@@ -9,14 +9,15 @@ import re
 import datetime
 import pandas.io.data as web
 
-pandas_data_path = 'twitter_table.csv'
+tweets_input_path = 'twitter_table.csv'
+tweets_output_path = 'twitter_table_formatted.csv'
 companies = ['AAPL','AMZN','GOOG','MSFT']
 start = datetime.datetime(2015, 2, 1)
 end = datetime.datetime(2015, 2, 27)
 
 
 #Load pandas table
-tweets = pd.read_csv(pandas_data_path)
+tweets = pd.read_csv(tweets_input_path)
 
 #Read stock data
 stock_dict = {}
@@ -41,6 +42,7 @@ for index, row in tweets.iterrows():
 		val /= hits
 	row['value'] = val
 
-#TODO ...
+#Save the new pandas table
+tweets.to_csv(tweets_output_path)
 	
 input("Hit return to continue")
