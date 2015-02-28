@@ -26,6 +26,7 @@ for company in companies:
 
 #Map stocks to pandas table entries based on date and company
 #Example date string: "Tue Jul 15 14:19:30 +0000 2014"
+stock_vals = []
 for index, row in tweets.iterrows():
 	dt_list = row['created_at'].split()
 	dt_str = dt_list[5] + ' ' + dt_list[1] + ' ' + dt_list[2]
@@ -40,8 +41,9 @@ for index, row in tweets.iterrows():
 			hits += 1
 	if hits > 0:
 		val /= hits
-	row['value'] = val
-
+	x.append(val)
+tweets['value'] = stock_vals
+	
 #Save the new pandas table
 tweets.to_csv(tweets_output_path)
 	
