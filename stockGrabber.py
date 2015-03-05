@@ -41,7 +41,7 @@ for index, row in tweets.iterrows():
 			hits += 1
 	if hits > 0:
 		val /= hits
-	x.append(val)
+	stock_vals.append(val)
 tweets['value'] = stock_vals
 	
 #Save the new pandas table
