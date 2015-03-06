@@ -26,7 +26,6 @@ for company in companies:
 
 #Map stocks to pandas table entries based on date and company
 #Example date string: "Tue Jul 15 14:19:30 +0000 2014"
-#TODO stock vals might not be necessary
 stock_vals = []
 for index, row in tweets.iterrows():
 	dt_list = row['created_at'].split()
@@ -44,9 +43,10 @@ for index, row in tweets.iterrows():
 		val /= hits
 	stock_vals.append(val)
 	#TODO possibly do word map creation in this loop
+	
 tweets['value'] = stock_vals
 	
-#TODO create word map	
+#TODO create word map
 	
 #Save the new pandas table TODO this might not be necessary
 tweets.to_csv(tweets_output_path)
