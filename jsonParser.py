@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 import re
+import numpy as np
 
 tweets_input_path = 'twitter_data.txt'
 pandas_output_path = 'twitter_table.csv'
@@ -55,6 +56,7 @@ for line in tweets_file:
 tweets = pd.DataFrame()
 tweets['text'] = list(map(lambda tweet: tweet['text'], tweets_data))
 tweets['created_at'] = list(map(lambda tweet: tweet['created_at'], tweets_data))
+tweets['value'] = np.zeros(len(tweets_data))
     
 #Assemble the hashtag lists
 #Make sure there is a corresponding text file for each company (e.g. if apple is a company, there must be an apple.txt file)
