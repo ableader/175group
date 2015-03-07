@@ -29,11 +29,11 @@ class StdOutListener(StreamListener):
 
 if __name__ == '__main__':
 
-    #This handles Twitter authetification and the connection to Twitter Streaming API
-    l = StdOutListener()
-    auth = OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
-    stream = Stream(auth, l)
+	#This handles Twitter authetification and the connection to Twitter Streaming API
+	l = StdOutListener()
+	auth = OAuthHandler(consumer_key, consumer_secret)
+	auth.set_access_token(access_token, access_token_secret)
+	stream = Stream(auth, l)
 	
 	#Assemble the hashtag list
 	#Make sure there is a corresponding text file for each company (e.g. if apple is a company, there must be an apple.txt file)
@@ -49,4 +49,4 @@ if __name__ == '__main__':
 			print("derp")
 
     #This line filter Twitter Streams to capture data by the keywords: 'python', 'javascript', 'ruby'
-    stream.filter(track=hashtag_list)
+	stream.filter(track=hashtag_list)
