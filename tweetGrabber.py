@@ -1,10 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-This is a temporary script file.
-"""
-
+import tweepy
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
@@ -17,6 +11,7 @@ access_token = "3024465769-YfhrWdXbNK33W88DZgi5yw8nMzLi2Ozog9dvvFM"
 access_token_secret = "w28kDMBz8HKlnmtnNXqmh3GC8rbIAlSzuQAcRyGDwAJMi"
 
 outputFile = "twitter_data.txt"
+companies = ['AAPL','AMZN','GOOG','MSFT'] #List of companies to look through
 
 #This is a basic listener that just prints received tweets to stdout.
 class StdOutListener(StreamListener):
@@ -39,6 +34,19 @@ if __name__ == '__main__':
     auth = OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     stream = Stream(auth, l)
+	
+	#Assemble the hashtag list
+	#Make sure there is a corresponding text file for each company (e.g. if apple is a company, there must be an apple.txt file)
+	hashtag_list = []
+	for company in companies:
+		try:
+			file_path = company + ('.txt')
+			print(file_path)
+			hashtag_file = open(file_path, "r")
+			for line in hashtag_file:
+				hashtag_list.append(line)
+		except:
+			print("derp")
 
     #This line filter Twitter Streams to capture data by the keywords: 'python', 'javascript', 'ruby'
-    stream.filter(track=['python', 'javascript', 'ruby'])
+    stream.filter(track=hashtag_list)
