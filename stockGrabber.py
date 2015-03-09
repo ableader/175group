@@ -42,7 +42,7 @@ for index, row in tweets.iterrows():
 	if hits > 0:
 		val /= hits
 	#TODO possibly do word map creation in this loop
-	for word in row['text']:
+	for word in row['text'].split(" "):
 		#text reading
 		if word in wordlist_dict:
 			wordlist_dict[word].append(val)
