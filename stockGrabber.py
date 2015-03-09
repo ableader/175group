@@ -10,7 +10,7 @@ import datetime
 import pandas.io.data as web
 
 tweets_input_path = 'twitter_table.csv'
-tweets_output_path = 'twitter_table_formatted.csv'
+word_map_output_path = 'word_map.txt'
 companies = ['AAPL','AMZN','GOOG','MSFT']
 start = datetime.datetime(2015, 2, 1)
 end = datetime.datetime(2015, 2, 27)
@@ -26,7 +26,7 @@ for company in companies:
 
 #Map stocks to pandas table entries based on date and company
 #Example date string: "Tue Jul 15 14:19:30 +0000 2014"
-stock_vals = []
+wordlist_dict = {}
 for index, row in tweets.iterrows():
 	dt_list = row['created_at'].split()
 	dt_str = dt_list[5] + ' ' + dt_list[1] + ' ' + dt_list[2]
@@ -41,14 +41,21 @@ for index, row in tweets.iterrows():
 			hits += 1
 	if hits > 0:
 		val /= hits
-	stock_vals.append(val)
 	#TODO possibly do word map creation in this loop
-	
-tweets['value'] = stock_vals
+	for word in row['text']:
+		#text reading
+		if word in wordlist_dict:
+			wordlist_dict[word].append(val)
+		else:
+			wordlist_dict[word] = [val]
 	
 #TODO create word map
+wordavg_dict = {}
+for word in wordlist_dict:
+	wordavg_dict[word] = sum(wordlist_dict[word])/len(wordlist_dict[word])
 	
-#Save the new pandas table TODO this might not be necessary
-tweets.to_csv(tweets_output_path)
+#Save the word dict
+with open(word_map_output_path, 'w') as outfile:
+    json.dump(wordavg_dict, outfile)
 	
 input("Hit return to continue")
