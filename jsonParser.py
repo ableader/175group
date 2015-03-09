@@ -46,21 +46,27 @@ def analyze_column(col, list):
 tweets_data = []
 tweets_file = open(tweets_input_path, "r")
 for line in tweets_file:
-    try:
-        tweet = json.loads(line)
-        tweets_data.append(tweet)
-    except:
-        print("herp")
+    if line == "\n":
+        print("skip")
+        print(line)
+    else:
+        try:
+            tweet = json.loads(line)
+            tweets_data.append(tweet)
+        except:
+            print("herp")
     
 #Create the tweet structure
-tweets = pd.DataFrame()
+tweets = pd.DataFrame(columns=['text','created_at','value'])
 tweets['text'] = list(map(lambda tweet: tweet['text'], tweets_data))
 tweets['created_at'] = list(map(lambda tweet: tweet['created_at'], tweets_data))
 tweets['value'] = np.zeros(len(tweets_data))
     
 #Assemble the hashtag lists
 #Make sure there is a corresponding text file for each company (e.g. if apple is a company, there must be an apple.txt file)
+
 hashtag_dict = {}
+
 for company in companies:
 	try:
 		file_path = company + ('.txt')

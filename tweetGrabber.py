@@ -18,9 +18,7 @@ class StdOutListener(StreamListener):
 
     def on_data(self, data):
         print(data)
-        dataFile = open(outputFile, 'w')
-        dataFile.write(data)
-        dataFile.close()
+        dataFile.write(data + "\n\n")
         return True
 
     def on_error(self, status):
@@ -34,6 +32,8 @@ if __name__ == '__main__':
 	auth = OAuthHandler(consumer_key, consumer_secret)
 	auth.set_access_token(access_token, access_token_secret)
 	stream = Stream(auth, l)
+ 
+	dataFile = open(outputFile, 'w')
 	
 	#Assemble the hashtag list
 	#Make sure there is a corresponding text file for each company (e.g. if apple is a company, there must be an apple.txt file)
@@ -44,9 +44,13 @@ if __name__ == '__main__':
 			print(file_path)
 			hashtag_file = open(file_path, "r")
 			for line in hashtag_file:
+				line = line.rstrip('\n')
+				print(line)
 				hashtag_list.append(line)
 		except:
 			print("derp")
 
-    #This line filter Twitter Streams to capture data by the keywords: 'python', 'javascript', 'ruby'
+    # Filter Twitter Streams to capture data by the keywords in our list
 	stream.filter(track=hashtag_list)
+ 
+	dataFile.close()
