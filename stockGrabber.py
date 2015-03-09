@@ -31,28 +31,31 @@ for index, row in tweets.iterrows():
 	dt_list = row['created_at'].split()
 	dt_str = dt_list[5] + ' ' + dt_list[1] + ' ' + dt_list[2]
 	dt = datetime.datetime.strptime(dt_str, "%Y %b %d").date()
-	#TODO stock mapping
+	#Assign value to the tweet
 	hits = 0
 	val = 0
 	for company in companies:
 		if row[company]:
 			stock_info = stock_dict[company].ix[dt.isoformat()]
-			val += stock_info['Close'] #TODO is this right
+			val += stock_info['Close']
 			hits += 1
 	if hits > 0:
 		val /= hits
-	#TODO possibly do word map creation in this loop
-	for word in row['text'].split(" "):
-		#text reading
+	#Add tweet's value to word's list of values (set everything to lowercase)
+	for w in row['text'].split(" "):
+		word = w.lower()
 		if word in wordlist_dict:
 			wordlist_dict[word].append(val)
 		else:
 			wordlist_dict[word] = [val]
 	
-#TODO create word map
+#Create word map
+#Value of a word is the average of the values in its list multiplied by a factor of its frequency
+#TODO frequency multiplier is determined by the word with the most tweets
 wordavg_dict = {}
 for word in wordlist_dict:
-	wordavg_dict[word] = sum(wordlist_dict[word])/len(wordlist_dict[word])
+	#wordavg_dict[word] = sum(wordlist_dict[word]) / len(wordlist_dict[word])
+	wordavg_dict[word] = sum(wordlist_dict[word]) / len(max(wordlist_dict,key=len))
 	
 #Save the word dict
 with open(word_map_output_path, 'w') as outfile:
