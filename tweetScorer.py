@@ -7,6 +7,7 @@ import pandas.io.data as web
 
 tweets_input_path = 'twitter_table.csv'
 word_map_input_path = 'word_map.txt'
+weight_map_output_path = 'weight_map.txt'
 companies = ['AAPL','AMZN','GOOG','MSFT']
 start = datetime.datetime(2015, 2, 10)
 end = datetime.datetime(2015, 2, 27)
@@ -33,20 +34,17 @@ for index, row in tweets.iterrows():
 		if row[company]:
 			company_scores[company] += tweet_score
 
-#grab stock data from specified source
-stock_dict = {}
+#grab stock data from specified date and compare
+weight_map = {}
 for company in companies:
-	stock_dict[company] = web.DataReader(company, 'google', start, end)
-	#TODO compare stock data to score (get stock difference in start and end data and compare it to score)
-	start_score = stock_dict[company].ix[start.date().isoformat()]['Close']
-	end_score = stock_dict[company].ix[end.date().isoformat()]['Close']
+	stock_data = web.DataReader(company, 'google', start, end)
+	start_score = stock_data.ix[start.date().isoformat()]['Close']
+	end_score = stock_data.ix[end.date().isoformat()]['Close']
 	difference = end_score - start_score
-	
-#TODO use difference
-#TODO catch the error that pops up if there is for some reason no stock data at the given start/end date
-			
-#Display results
-#TODO format this properly
-print(company_scores)
+	weight_map[company] = company_scores[company]/difference
+		
+#Save weight map
+with open(weight_map_output_path, 'w') as outfile:
+    json.dump(weight_map, outfile)
 			
 input("Hit return to continue")
